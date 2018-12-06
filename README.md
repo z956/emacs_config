@@ -3,6 +3,7 @@
 
 ## 安裝最新版本的emacs
 ```bash
+$ sudo apt-get install libxaw7-dev build-essential libgif-dev libtiff5-dev libjpeg-dev autoconf
 $ wget http://ftp.gnu.org/gnu/emacs/emacs-26.1.tar.xz
 $ tar -xf emacs-26.1.tar.xz && cd emacs-26.1
 $ ./configure --with-x-toolkit=lucid --with-modules
@@ -23,6 +24,15 @@ $ sudo fc-cache -f -v
 ```bash
 $ rm -rf ~/.emacs.d
 $ git clone --recursive https://github.com/syl20bnr/spacemacs ~/.emacs.d
+```
+
+## 第一次啟動emacs以安裝相關套件
+```bash
+# GUI mode
+$ emacs
+
+# command line mode
+$ emacs -nw
 ```
 
 ## 打開設定檔 .spacemacs 更改預設設定
@@ -72,6 +82,11 @@ dotspacemacs-default-font '("Source Code Pro"
                             :powerline-scale 1.1)
 ```
 
+### 更改theme
+```lisp
+dotspacemacs-themes '(zenburn)
+```
+
 ### 其他設定 (如快捷鍵)皆在 `user-config` 底下
 ```lisp
 ;; customized indent function
@@ -82,20 +97,24 @@ dotspacemacs-default-font '("Source Code Pro"
 
 (defun dotspacemacs/user-config ()
 
-  ;; enable tab mode to insert '\t'
-  (setq-default indent-tabs-mode t)
+  ;; disable tab mode
+  (setq-default indent-tabs-mode nil)
 
   ;; set style
   (setq-default c-default-style '((java-mode . "java")
-                                  (other . "linux")))
+                                  (other . "allman")))
 
   ;; customize indent width
-  (my-setup-indent 8)
+  (my-setup-indent 4)
 
   ;; shortcut of pasting from x-clipboard to emacs
   (global-set-key (kbd "C-S-v") 'x-clipboard-yank)
 
-  ;; diable auto-complte of closing bracket
+  ;; disable auto-complte of closing bracket
+  ;; when I use the following code, I got errors
+  ;; after reload .spacemacs
+  ;; the alternative way is disabling smartparens directly
+  ;; dotspacemacs-excluded-packages '(smartparens)
   (eval-after-load 'smartparens
     '(progn
       (sp-pair "(" nil :actions :rem)
@@ -104,10 +123,16 @@ dotspacemacs-default-font '("Source Code Pro"
       (sp-pair "'" nil :actions :rem)
       (sp-pair "\"" nil :actions :rem)
       ))
+
+  ;; enable highlight on parenthesis
+  (progn
+    (show-paren-mode 1)
+    (setq show-paren-style 'parenthesis)
+    )
   )
 ```
 
-## 第一次啟動emacs以安裝相關套件
+## 重新啟動emacs以安裝相關套件
 ```bash
 # GUI mode
 $ emacs
