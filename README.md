@@ -180,6 +180,18 @@ dotspacemacs-themes '(zenburn)
 
   ;; set proper color value for trailing whitespace
   (set-face-attribute 'trailing-whitespace nil :background "#ff0000" :foreground "#ffffff")
+
+  ;; set proper color value for matched parentheses
+  (set-face-attribute 'show-paren-match nil :background "#5ac1e1" :foreground "#ffffff")
+
+  ;; draw underline to current cursor position only in terminal mode
+  (if (not (display-graphic-p))
+      (progn
+        (set-face-background 'hl-line nil)
+        (set-face-foreground 'hl-line nil)
+        (set-face-underline  'hl-line t)
+	)
+    )
 ```
 
 ## 重新啟動emacs以安裝相關套件
