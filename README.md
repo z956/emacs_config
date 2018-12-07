@@ -213,6 +213,22 @@ SPC b d
 SPC b m
 ```
 
+## execute command in emacs
+```lisp
+;; 執行指令並顯示在一個新的buffer上
+M-! <shell command>
+M-x shell RET <shell command>
+
+;; run a shell in a new buffer
+M-x term
+
+;; run eshell
+M-x eshell
+
+;; 在shell中, 按ESC回到normal mode, 可進行複製, 貼上等動作
+;; 按i進入insert mode, 輸入指令
+```
+
 # 已知問題
 ## 無法在insert mode (emacs叫做insert state)下按TAB來輸入`'\t'`
 可以在`user-config`下加入設定來修改, 但不確定有什麼副作用
@@ -251,9 +267,6 @@ dotspacemacs-whitespace-cleanup 'hungry
 待確認，應能找到和vim的`set ic`和`set noic`相同的command
 
 ## 無法根據不同副檔名設定tab width和indent size
-待確認
-
-## emacs底下執行command
 待確認
 
 ## C/C++的code trace tool
