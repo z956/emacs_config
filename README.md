@@ -141,8 +141,7 @@ dotspacemacs-themes '(zenburn)
           (message "Yanked region to x-clipboard!")
           (call-interactively 'clipboard-kill-ring-save)
           )
-      ;;      (if (region-active-p)
-      (if (use-region-p)
+      (if (region-active-p)
           (progn
             (shell-command-on-region (region-beginning) (region-end) "xsel -i -b")
             (message "Yanked region to clipboard!")
@@ -165,6 +164,22 @@ dotspacemacs-themes '(zenburn)
   ;; set shortcut to copy to/paste from clipboard
   (evil-leader/set-key "o p" 'paste-from-clipboard)
   (evil-leader/set-key "o y" 'copy-to-clipboard)
+
+  ;; proper setting for shell mode
+  (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on t)
+
+  ;; set proper color value for region
+  (set-face-attribute 'region nil :background "#666")
+
+  ;; disable lazy-highlight for search result
+  (setq lazy-highlight-cleanup nil)
+
+  ;; set proper color value for search result
+  (set-face-attribute 'lazy-highlight nil :background "#ffff00" :foreground "#000000")
+
+  ;; set proper color value for trailing whitespace
+  (set-face-attribute 'trailing-whitespace nil :background "#ff0000" :foreground "#ffffff")
 ```
 
 ## 重新啟動emacs以安裝相關套件
@@ -336,6 +351,29 @@ set -s escape-time 0
 可能和terminal的color設定有關，在`.bashrc`或`.zshrc`等dotfile中加入
 ```bash
 export TERM=xterm-256color
+```
+
+## emacs shell mode中下指令會有色碼出現
+和shell設定有關，編輯`dumb-emacs-ansi.ti`
+```bash
+dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
+    am,
+    colors#8, it#8, ncv#13, pairs#64,
+    bold=\E[1m, cud1=^J, ht=^I, ind=^J, op=\E[39;49m,
+    ritm=\E[23m, rmul=\E[24m, setab=\E[4%p1%dm,
+    setaf=\E[3%p1%dm, sgr0=\E[m, sitm=\E[3m, smul=\E[4m, 
+```
+
+執行以下指令編譯
+```bash
+$ tic dumb-emacs-ansi.ti
+```
+
+接著在`.bashrc`或`.zshrc`中加入
+```bash
+if [ "$INSIDE_EMACS" ]; then
+    export TERM=dumb-emacs-ansi COLORTERM=1
+fi
 ```
 
 ## 開啟速度很慢
