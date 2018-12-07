@@ -1,4 +1,4 @@
-# spacemacs_config
+# emacs_config
 從vim轉到emacs的設定紀錄
 
 ## 安裝最新版本的emacs
@@ -127,6 +127,44 @@ dotspacemacs-themes '(zenburn)
     (setq show-paren-style 'parenthesis)
     )
   )
+
+  ;; enable clipboard and disable primary
+  (setq x-select-enable-clipboard t)
+  (setq x-select-enable-primary nil)
+
+  ;; helper function to utilize clipboard
+  (defun copy-to-clipboard ()
+    "Copies selection to x-clipboard."
+    (interactive)
+    (if (display-graphic-p)
+	(progn
+          (message "Yanked region to x-clipboard!")
+          (call-interactively 'clipboard-kill-ring-save)
+          )
+      ;;      (if (region-active-p)
+      (if (use-region-p)
+          (progn
+            (shell-command-on-region (region-beginning) (region-end) "xsel -i -b")
+            (message "Yanked region to clipboard!")
+            (deactivate-mark))
+	(message "No region active; can't yank to clipboard!"))
+      )
+    )
+  (defun paste-from-clipboard ()
+    "Pastes from x-clipboard."
+    (interactive)
+    (if (display-graphic-p)
+        (progn
+          (clipboard-yank)
+          (message "graphics active")
+          )
+      (insert (shell-command-to-string "xsel -o -b"))
+      )
+    )
+
+  ;; set shortcut to copy to/paste from clipboard
+  (evil-leader/set-key "o p" 'paste-from-clipboard)
+  (evil-leader/set-key "o y" 'copy-to-clipboard)
 ```
 
 ## 重新啟動emacs以安裝相關套件
@@ -153,6 +191,16 @@ TODO!
 ## 離開emacs
 ```lisp
 C-x C-c
+```
+
+## 開啟/重新載入.spacemacs
+```lisp
+;; 開啟.spacemacs
+SPC f e d
+
+;; 重新載入.spacemacs
+;; 不知為何，有時重載無效，還是需要重啟emacs
+SPC f e R
 ```
 
 ## helm
@@ -243,16 +291,19 @@ M-b
 ;; cursor往後一個word
 M-f
 ```
-
 ## copy to/paste from clipboard
 ```lisp
+;; 此指令需要先設定user-config，請確認相關自定義function都有
+
 ;; copy to clipboard
-;; 用visual mode選取想要copy的範圍後
-+y
+;; 用visual mode或滑鼠選取想要複製的區域後
+SPC o y
 
 ;; paste from clipboard
-+p
+;; 在normal mode下
+SPC o p
 ```
+
 # 已知問題
 ## 無法在insert mode (emacs叫做insert state)下按TAB來輸入`'\t'`
 可以在`user-config`下加入設定來修改, 但不確定有什麼副作用
@@ -274,11 +325,6 @@ dotspacemacs-whitespace-cleanup 'hungry
 <p>上兩個tab相關問題...現在找不到和vim類似的設定<p>
 
 我目前用快捷鍵`C-t`來insert tab，用`C-d`刪除tab
-
-## paste from clipboard僅能用在檔案上
-<p>除了檔案內容可以用外，其他地方不能用</p>
-
-例如按`/`搜尋時，無法用`+p`把clipboard的內容貼上
 
 ## normal mode和insert mode之間切換很慢
 這是因為tmux的設定關係，將以下設定加入`.tmux.conf`中
