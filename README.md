@@ -203,8 +203,14 @@ C-c d
 ;; 在buffer list中rename buffer
 F9
 
-;; 在normal mode下switch buffer
+;; 在normal mode下switch至last buffer
 SPC TAB
+
+;; 在normal mode下switch至下一個buffer
+SPC b n
+
+;; 在normal mode下switch至上一個buffer
+SPC b p
 
 ;; 在normal mode下刪除現在的focused buffer
 SPC b d
