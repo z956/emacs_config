@@ -281,14 +281,23 @@ dotspacemacs-whitespace-cleanup 'hungry
 例如按`/`搜尋時，無法用`+p`把clipboard的內容貼上
 
 ## normal mode和insert mode之間切換很慢
-<p>網路有人說若用tmux開啟command line mode的emacs，mode之間切換會很慢</p>
-<p>目前暫時用GUI版本</p>
+這是因為tmux的設定關係，將以下設定加入`.tmux.conf`中
+```bash
+set -s escape-time 0
+```
+
+## emacs terminal mode的顏色很奇怪
+可能和terminal的color設定有關，在`.bashrc`或`.zshrc`等dotfile中加入
+```bash
+export TERM=xterm-256color
+```
 
 ## 開啟速度很慢
 可以用emacs的client/server架構，待確認
 
 ## search時是case insensitive
-待確認，應能找到和vim的`set ic`和`set noic`相同的command
+似乎沒有類似vim中的`set ic`和`set noic`的command
+在搜尋時按`M-c`可以選擇是否要case insensitive，但有時沒有效果
 
 ## 無法根據不同副檔名設定tab width和indent size
 待確認
