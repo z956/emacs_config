@@ -107,9 +107,6 @@ dotspacemacs-themes '(zenburn)
   ;; customize indent width
   (my-setup-indent 4)
 
-  ;; shortcut of pasting from x-clipboard to emacs
-  (global-set-key (kbd "C-S-v") 'x-clipboard-yank)
-
   ;; disable auto-complte of closing bracket
   ;; when I use the following code, I got errors
   ;; after reload .spacemacs
@@ -203,6 +200,9 @@ RET
 ;; 在buffer list中刪除buffer
 C-c d
 
+;; 在buffer list中rename buffer
+F9
+
 ;; 在normal mode下switch buffer
 SPC TAB
 
@@ -227,8 +227,26 @@ M-x eshell
 
 ;; 在shell中, 按ESC回到normal mode, 可進行複製, 貼上等動作
 ;; 按i進入insert mode, 輸入指令
+
+;; 刪除一個word
+M-backspace
+
+;; cursor往前一個word
+M-b
+
+;; cursor往後一個word
+M-f
 ```
 
+## copy to/paste from clipboard
+```lisp
+;; copy to clipboard
+;; 用visual mode選取想要copy的範圍後
++y
+
+;; paste from clipboard
++p
+```
 # 已知問題
 ## 無法在insert mode (emacs叫做insert state)下按TAB來輸入`'\t'`
 可以在`user-config`下加入設定來修改, 但不確定有什麼副作用
@@ -251,10 +269,10 @@ dotspacemacs-whitespace-cleanup 'hungry
 
 我目前用快捷鍵`C-t`來insert tab，用`C-d`刪除tab
 
-## 和clipboard之間的copy/paste
-<p>雖然可以用x-clipboard-yank來做copy/paste, 但有些情況下無法使用</p>
+## paste from clipboard僅能用在檔案上
+<p>除了檔案內容可以用外，其他地方不能用</p>
 
-例如在normal mode下按`/`搜尋關鍵字時, 無法貼上關鍵字
+例如按`/`搜尋時，無法用`+p`把clipboard的內容貼上
 
 ## normal mode和insert mode之間切換很慢
 <p>網路有人說若用tmux開啟command line mode的emacs，mode之間切換會很慢</p>
