@@ -184,12 +184,21 @@ dotspacemacs-themes '(zenburn)
   ;; set proper color value for matched parentheses
   (set-face-attribute 'show-paren-match nil :background "#5ac1e1" :foreground "#ffffff")
 
-  ;; draw underline to current cursor position only in terminal mode
+  ;; setting only in terminal mode
   (if (not (display-graphic-p))
       (progn
+	;; draw underline to current cursor position
         (set-face-background 'hl-line nil)
         (set-face-foreground 'hl-line nil)
         (set-face-underline  'hl-line t)
+
+	;; add padding between line number and text content
+	(setq linum-format
+	      (lambda (line) (propertize
+			      (format (let ((w (length
+						(number-to-string
+						 (count-lines (point-min) (point-max))))))
+					(concat "%" (number-to-string w) "d ")) line) 'face 'linum)))
 	)
     )
   )
