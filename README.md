@@ -192,6 +192,7 @@ dotspacemacs-themes '(zenburn)
         (set-face-underline  'hl-line t)
 	)
     )
+  )
 ```
 
 ## 重新啟動emacs以安裝相關套件
