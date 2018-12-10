@@ -418,3 +418,6 @@ fi
 
 ## C/C++的code trace tool
 還未嘗試，待確認
+
+## shell和文件同時開啟問題
+同時開啟shell和文件時，在文件區下指令會影響到shell
