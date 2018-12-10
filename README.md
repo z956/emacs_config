@@ -103,6 +103,8 @@ dotspacemacs-themes '(zenburn)
   ;; set style
   (setq-default c-default-style '((java-mode . "java")
                                   (other . "allman")))
+  ;; set default tab width
+  (setq-default tab-width 4)
 
   ;; customize indent width
   (my-setup-indent 4)
