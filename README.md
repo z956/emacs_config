@@ -202,9 +202,34 @@ dotspacemacs-themes '(zenburn)
   ;; insert a tab when we hit TAB in insert state
   (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
 
-  ;; delete a char when we hit in insert state
-  (setq-default c-backspace-function 'delete-backward-char)
-  (define-key evil-insert-state-map [backspace] 'delete-backward-char)
+  ;; set the behavior of backspace according to the indent tab mode
+  (if (boundp 'indent-tabs-mode)
+      (progn
+        (defun get-deletion-count (arg)
+          "Return the amount of spaces to be deleted, ARG is indentation border."
+          (if (eq (current-column) 0) 0
+            (let ((result (mod (current-column) arg)))
+              (if (eq result 0) arg
+                result))))
+        (defun backspace-some (arg)
+          "Deletes some backspaces, ARG unused."
+          (interactive "*P")
+          (if (use-region-p) (backward-delete-char-untabify 1)
+            (let ((here (point)))
+              (if (eq 0 (skip-chars-backward " " (- (point) (get-deletion-count 4))))
+                  (backward-delete-char-untabify 1)
+                (delete-region (point) here)))))
+
+        ;; set backspace to delete a size of tab
+        (setq-default c-backspace-function 'backspace-some)
+        (define-key evil-insert-state-map [backspace] 'backspace-some)
+        )
+    (progn
+      ;; delete a char when we hit in insert state
+      (setq-default c-backspace-function 'delete-backward-char)
+      (define-key evil-insert-state-map [backspace] 'delete-backward-char)
+      )
+    )
   )
 ```
 
