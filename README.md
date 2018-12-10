@@ -196,6 +196,13 @@ dotspacemacs-themes '(zenburn)
   ;; add space between line number and text content
   (unless (display-graphic-p)
     (setq linum-format (concat linum-format " ")))
+
+  ;; insert a tab when we hit TAB in insert state
+  (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
+
+  ;; delete a char when we hit in insert state
+  (setq-default c-backspace-function 'delete-backward-char)
+  (define-key evil-insert-state-map [backspace] 'delete-backward-char)
   )
 ```
 
@@ -337,27 +344,6 @@ SPC o p
 ```
 
 # 已知問題
-## 無法在insert mode (emacs叫做insert state)下按TAB來輸入`'\t'`
-可以在`user-config`下加入設定來修改, 但不確定有什麼副作用
-```lisp
-(define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
-```
-
-## 在insert mode下按baskspace刪除tab時, tab會被轉換成space, 並且只能逐一刪除space
-更改`dotspacemacs/init`下的`dotspacemacs-whitespace-cleanup`設定
-
-```lisp
-dotspacemacs-whitespace-cleanup 'hungry
-```
-
-<p>但設定為hungry mode後，刪除時是會將所有trailing whiltespace, tab給刪除</p>
-<p>和vim底下的一個tab或space刪除是不同的</p>
-
-## tab相關
-<p>上兩個tab相關問題...現在找不到和vim類似的設定<p>
-
-我目前用快捷鍵`C-t`來insert tab，用`C-d`刪除tab
-
 ## normal mode和insert mode之間切換很慢
 這是因為tmux的設定關係，將以下設定加入`.tmux.conf`中
 ```bash
